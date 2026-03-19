@@ -5,12 +5,9 @@ import { DistrictFeature, DistrictFeatureCollection } from "@/global/types/bound
 import { EvaluationResponse } from "@/global/types/evaluation";
 import DistrictInfoContainer from "@/components/Map/DistrictInfoContainer";
 import boundariesData from "@/global/boundaries/hamburg/hamburgStadtteile.json";
-import resultData from "@/global/results/evaluation.json";
 
 const boundaries = boundariesData as DistrictFeatureCollection;
-const results = resultData as EvaluationResponse;
-
-sessionStorage.setItem("onboarding", JSON.stringify(resultData))
+const results = JSON.parse(sessionStorage.getItem('onboarding') || '{}') as EvaluationResponse
 
 const HAMBURG_CENTER = L.latLng(53.57532, 10.01534);
 const DEFAULT_ZOOM = 12;
@@ -27,7 +24,7 @@ function getDistrictColor(score: number): string {
 }
 
 function getDistrictStyle(name: string): L.PathOptions {
-  const district = results.districts[name];
+  const district = results?.districts[name];
   if (!district) return { color: "gray", opacity: 0.5, stroke: false };
   const color = getDistrictColor(district.matchingScore);
   return { color, fillColor: color, opacity: 1 };
@@ -40,7 +37,6 @@ export default function Map() {
 
   useEffect(() => {
     if (mapRef.current) return;
-
     const map = L.map("map").setView(HAMBURG_CENTER, DEFAULT_ZOOM);
     mapRef.current = map;
 
@@ -48,10 +44,10 @@ export default function Map() {
       maxZoom: 19,
       attribution: TILE_ATTRIBUTION,
     }).addTo(map);
-
     boundaries.features.forEach((stadtteil: DistrictFeature) => {
       const name = stadtteil.properties.Stadtteil;
-
+      
+      if(Object.keys(results).length === 0) return;
       const layer = L.geoJSON(stadtteil as unknown as GeoJSON.Feature, {
         style: getDistrictStyle(name),
         onEachFeature: (_feature, featureLayer) => {
