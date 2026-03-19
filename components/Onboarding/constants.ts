@@ -45,3 +45,5 @@ export const PROFESSION_OPTIONS = [
     description: "Ich bin im Ruhestand und suche ein ruhiges Zuhause.",
   },
 ];
+
+export const DEFAULT_IMPORTANCE_LEVEL = 3;
