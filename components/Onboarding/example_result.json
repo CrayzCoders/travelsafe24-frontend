@@ -1,0 +1,23 @@
+// if user answers yes to everything
+{
+    "needsKitasSchoolsUnis": true,
+    "importanceKitas": 2,
+    "importanceSchulen": 2,
+    "importanceUnis": 2,
+    "age": 23,
+    "profession": "student",
+    "goesToBarsClubs": true,
+    "importanceClubs": 3,
+    "importanceBars": 3,
+    "wantsCentralLiving": true,
+    "importanceCityCenter": 2,
+    "importancePublicTransport": 2
+}
+// if user answers no to everything
+{
+    "needsKitasSchoolsUnis": false,
+    "age": 23,
+    "profession": "student",
+    "goesToBarsClubs": false,
+    "wantsCentralLiving": false
+}
