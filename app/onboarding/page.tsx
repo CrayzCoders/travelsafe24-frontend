@@ -18,9 +18,10 @@ import OnboardingStepManager from "@/components/Onboarding/OnboardingStepManager
 import StepOne from "@/components/Onboarding/steps/StepOne";
 import StepTwo from "@/components/Onboarding/steps/StepTwo";
 import StepThree from "@/components/Onboarding/steps/StepThree";
-import { toBackendPayload } from "@/components/Onboarding/utils";
+import { isStepValid, toBackendPayload } from "@/components/Onboarding/utils";
 
 export default function Onboarding() {
+  const [error, setError] = useState("");
   const [formState, setFormState] = useState<FormState>(INITIAL_FORM_STATE);
   const [formLayer, setFormLayer] = useState(0);
   const [changeAnimation, setChangeAnimation] = useState<ChangeAnimation>({
@@ -63,6 +64,12 @@ export default function Onboarding() {
 
   const handleNext = () => {
     if (formLayer >= formLayers.length - 1) return;
+    if (!isStepValid(formLayer, formState)) {
+      setError("Please fill all required fields.");
+      return;
+    } else {
+      setError("");
+    }
     setChangeAnimation({ active: true, offset: -800 });
     setTimeout(() => setFormLayer((prev) => prev + 1), 300);
   };
@@ -75,12 +82,18 @@ export default function Onboarding() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isStepValid(formLayer, formState)) {
+      setError("Please fill all required fields.");
+      return;
+    } else {
+      setError("");
+    }
     const payload = toBackendPayload(formState);
     console.log(payload);
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full max-w-2xl mx-auto p-16 mt-16 border rounded-3xl transition-all">
       <form onSubmit={handleSubmit}>
         <FieldGroup>
           <FieldSet className="overflow-hidden">
@@ -91,6 +104,13 @@ export default function Onboarding() {
               All the data is stored in a secure and encrypted way and used only
               for the purpose of finding the best fit for you.
             </FieldDescription>
+
+            {error && (
+              <FieldDescription className="text-red-500 text-sm font-medium mt-2 transition">
+                *{error}
+              </FieldDescription>
+            )}
+
             <OnboardingStepManager
               formLayers={formLayers}
               activeLayer={formLayer}
