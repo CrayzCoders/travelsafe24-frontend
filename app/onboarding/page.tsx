@@ -93,7 +93,7 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-16 mt-16 border rounded-3xl transition-all">
+    <div className="w-full max-w-2xl mx-auto p-16 mt-16 lg:border rounded-3xl transition-all">
       <form onSubmit={handleSubmit}>
         <FieldGroup>
           <FieldSet className="overflow-hidden">
