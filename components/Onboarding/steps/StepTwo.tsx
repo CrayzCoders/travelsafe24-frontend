@@ -14,7 +14,7 @@ export default function StepTwo({ formState, onChange }: StepProps) {
   return (
     <>
       <Field>
-        <FieldLabel htmlFor="age">Wie alt bist du?</FieldLabel>
+        <FieldLabel htmlFor="age">Wie alt bist du?*</FieldLabel>
         <Input
           id="age"
           type="number"
@@ -26,7 +26,9 @@ export default function StepTwo({ formState, onChange }: StepProps) {
       </Field>
 
       <Field>
-        <FieldLabel>Welche Berufsbezeichnung passt am besten zu dir?</FieldLabel>
+        <FieldLabel>
+          Welche Berufsbezeichnung passt am besten zu dir?*
+        </FieldLabel>
         <RadioGroup
           value={formState.profession}
           onValueChange={(v) => onChange("profession", v)}

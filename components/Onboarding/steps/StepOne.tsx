@@ -8,7 +8,9 @@ export default function StepOne({ formState, onChange }: StepProps) {
   return (
     <>
       <Field>
-        <FieldLabel>Benötigst du KiTas / Schulen / Unis in der Nähe?</FieldLabel>
+        <FieldLabel>
+          Benötigst du KiTas / Schulen / Unis in der Nähe?*
+        </FieldLabel>
         <YesNoRadioGroup
           value={formState.needsKitasSchoolsUnis}
           onValueChange={(v) => onChange("needsKitasSchoolsUnis", v)}

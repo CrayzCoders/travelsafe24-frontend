@@ -8,7 +8,7 @@ export default function StepThree({ formState, onChange }: StepProps) {
   return (
     <>
       <Field>
-        <FieldLabel>Gehst du gerne aus?</FieldLabel>
+        <FieldLabel>Gehst du gerne aus?*</FieldLabel>
         <YesNoRadioGroup
           value={formState.goesToBarsClubs}
           onValueChange={(v) => onChange("goesToBarsClubs", v)}
@@ -35,7 +35,7 @@ export default function StepThree({ formState, onChange }: StepProps) {
       </ConditionalField>
 
       <Field>
-        <FieldLabel>Willst du zentral wohnen?</FieldLabel>
+        <FieldLabel>Willst du zentral wohnen?*</FieldLabel>
         <YesNoRadioGroup
           value={formState.wantsCentralLiving}
           onValueChange={(v) => onChange("wantsCentralLiving", v)}
@@ -53,7 +53,9 @@ export default function StepThree({ formState, onChange }: StepProps) {
         </Field>
 
         <Field>
-          <FieldLabel>Wie wichtig sind dir öffentliche Verkehrsmittel?</FieldLabel>
+          <FieldLabel>
+            Wie wichtig sind dir öffentliche Verkehrsmittel?
+          </FieldLabel>
           <ImportanceSlider
             value={formState.importancePublicTransport}
             onValueChange={(v) => onChange("importancePublicTransport", v)}
