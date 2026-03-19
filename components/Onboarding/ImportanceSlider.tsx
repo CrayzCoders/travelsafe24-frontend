@@ -1,6 +1,6 @@
 "use client";
 import { Slider } from "@/components/ui/slider";
-import { IMPORTANCE_OPTIONS } from "./constants";
+import { DEFAULT_IMPORTANCE_LEVEL, IMPORTANCE_OPTIONS } from "./constants";
 import { type ImportanceLevel } from "./types";
 
 interface ImportanceSliderProps {
@@ -12,16 +12,13 @@ export default function ImportanceSlider({
   value,
   onValueChange,
 }: ImportanceSliderProps) {
-  const numericValue = value === "" ? null : Number(value);
-  const currentLabel = IMPORTANCE_OPTIONS.find((o) => o.value === value)?.label;
+  const numericValue = value === "" ? DEFAULT_IMPORTANCE_LEVEL : Number(value);
 
   return (
     <div className="flex flex-col gap-2 pt-1">
       <div className="flex justify-between items-center text-sm px-0.5">
         <span className="text-muted-foreground text-xs">Nicht wichtig</span>
-        <span className="font-medium text-sm min-h-5">
-          {currentLabel ?? ""}
-        </span>
+        <span className="text-muted-foreground text-xs">Neutral</span>
         <span className="text-muted-foreground text-xs">Sehr wichtig</span>
       </div>
 
