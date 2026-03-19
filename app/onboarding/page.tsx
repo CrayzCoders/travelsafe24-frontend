@@ -19,8 +19,10 @@ import StepOne from "@/components/Onboarding/steps/StepOne";
 import StepTwo from "@/components/Onboarding/steps/StepTwo";
 import StepThree from "@/components/Onboarding/steps/StepThree";
 import { isStepValid, toBackendPayload } from "@/components/Onboarding/utils";
+import { useRouter } from "next/navigation";
 
 export default function Onboarding() {
+  const router = useRouter();
   const [error, setError] = useState("");
   const [formState, setFormState] = useState<FormState>(INITIAL_FORM_STATE);
   const [formLayer, setFormLayer] = useState(0);
@@ -80,7 +82,7 @@ export default function Onboarding() {
     setTimeout(() => setFormLayer((prev) => prev - 1), 300);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isStepValid(formLayer, formState)) {
       setError("Please fill all required fields.");
@@ -89,7 +91,15 @@ export default function Onboarding() {
       setError("");
     }
     const payload = toBackendPayload(formState);
-    console.log(payload);
+    const response = await fetch(`http://localhost:8080/get-matching-scores`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }).then((response) => response.json());
+    sessionStorage.setItem("onboarding", JSON.stringify(response));
+    router.push("/map");
   };
 
   return (
