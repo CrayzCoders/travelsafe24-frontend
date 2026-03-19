@@ -1,92 +1,93 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
+import { DistrictFeature, DistrictFeatureCollection } from "@/global/types/boundaries";
+import { EvaluationResponse } from "@/global/types/evaluation";
+import DistrictInfoContainer from "@/components/Map/DistrictInfoContainer";
 import boundariesData from "@/global/boundaries/hamburg/hamburgStadtteile.json";
 import resultData from "@/global/results/evaluation.json";
-import DistrictInfoContainer from "@/components/Map/DistrictInfoContainer";
 
-let highlightedLayer: L.GeoJSON | null = null;
+const boundaries = boundariesData as DistrictFeatureCollection;
+const results = resultData as EvaluationResponse;
 
-function getColor(percentage: number) {
-  if (percentage < 50) return "red";
-  if (percentage < 75) return "orange";
+const HAMBURG_CENTER = L.latLng(53.57532, 10.01534);
+const DEFAULT_ZOOM = 12;
+const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+const TILE_ATTRIBUTION =
+  '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
+type SelectedLayer = L.Layer & { feature: DistrictFeature };
+
+function getDistrictColor(score: number): string {
+  if (score < 50) return "red";
+  if (score < 75) return "orange";
   return "green";
 }
 
-function showDistrictInfo(district: any) {
-  //   console.log(district);
+function getDistrictStyle(name: string): L.PathOptions {
+  const district = results.districts[name];
+  if (!district) return { color: "gray", opacity: 0.5, stroke: false };
+  const color = getDistrictColor(district.matchingScore);
+  return { color, fillColor: color, opacity: 1 };
 }
 
-function renderResults(map: L.Map, setDistrictInfo: CallableFunction) {
-  boundariesData.features.forEach((stadtteil: any) => {
-    const name = stadtteil.properties.Stadtteil;
-    const hasResult = name in resultData.districts;
-    const stadtColor = hasResult
-      ? getColor((resultData.districts as any)[name].matchingScore)
-      : "gray";
+export default function Map() {
+  const mapRef = useRef<L.Map | null>(null);
+  const highlightedLayerRef = useRef<L.GeoJSON | null>(null);
+  const [selectedLayer, setSelectedLayer] = useState<SelectedLayer | null>(null);
 
-    const defaultStyle: L.PathOptions = hasResult
-      ? { color: stadtColor, fillColor: stadtColor, opacity: 1 }
-      : { color: "gray", opacity: 0.5, stroke: false };
-
-    const layer = L.geoJSON(stadtteil, {
-      style: defaultStyle,
-      onEachFeature: (_feature, featureLayer) => {
-        featureLayer.on("mouseover", () => {
-          if (highlightedLayer && highlightedLayer !== layer) {
-            highlightedLayer.resetStyle();
-          }
-
-          (featureLayer as L.Polygon).setStyle({
-            weight: 3,
-            color: "#fff",
-            fillOpacity: 0.7,
-          });
-
-          highlightedLayer = layer;
-        });
-        featureLayer.on("click", () => {
-          setDistrictInfo(featureLayer);
-        });
-      },
-    });
-
-    map.addLayer(layer);
-  });
-}
-
-function Map() {
-  const isInitial = useRef(true);
-  const [districtInfo, setDistrictInfo] = useState({});
   useEffect(() => {
-    if (!isInitial.current) return;
-    isInitial.current = false;
+    if (mapRef.current) return;
 
-    const mapLatLan = L.latLng(53.57532, 10.01534);
-    const map = L.map("map").setView(mapLatLan, 12);
+    const map = L.map("map").setView(HAMBURG_CENTER, DEFAULT_ZOOM);
+    mapRef.current = map;
 
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    L.tileLayer(TILE_URL, {
       maxZoom: 19,
-      attribution:
-        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      attribution: TILE_ATTRIBUTION,
     }).addTo(map);
 
-    renderResults(map, setDistrictInfo);
+    boundaries.features.forEach((stadtteil: DistrictFeature) => {
+      const name = stadtteil.properties.Stadtteil;
+
+      const layer = L.geoJSON(stadtteil as unknown as GeoJSON.Feature, {
+        style: getDistrictStyle(name),
+        onEachFeature: (_feature, featureLayer) => {
+          featureLayer.on("mouseover", () => {
+            if (highlightedLayerRef.current && highlightedLayerRef.current !== layer) {
+              highlightedLayerRef.current.resetStyle();
+            }
+            (featureLayer as L.Polygon).setStyle({
+              weight: 3,
+              color: "#fff",
+              fillOpacity: 0.7,
+            });
+            highlightedLayerRef.current = layer;
+          });
+
+          featureLayer.on("click", () => {
+            setSelectedLayer(featureLayer as SelectedLayer);
+          });
+        },
+      });
+
+      layer.addTo(map);
+    });
+
+    return () => {
+      map.remove();
+      mapRef.current = null;
+    };
   }, []);
-  useEffect(() => {
-    console.log(districtInfo);
-  }, [districtInfo]);
 
   return (
     <div style={{ position: "relative" }}>
-      <div className={"h-full"} id="map"></div>
-      <div className={"absolute top-0 right-0 z-400"}>
+      <div className="h-full" id="map" />
+      <div className="absolute top-0 right-0 z-400">
         <DistrictInfoContainer
-          districtName={districtInfo.feature.properties.Stadtteil}
+          districtName={selectedLayer?.feature?.properties?.Stadtteil}
         />
       </div>
     </div>
   );
 }
-
-export default Map;
