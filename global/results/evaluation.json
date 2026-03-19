@@ -1,0 +1,43 @@
+{
+  "infos": {
+    "city": "Hamburg",
+    "minScore": 50,
+    "maxScore": 87
+  },
+  "districts": {
+    "Allermöhe": {
+      "matchingScore": 100,
+      "criteria": [
+        {
+          "name": "KiTas",
+          "value": 120
+        },
+        {
+          "name": "Unis",
+          "value": 100
+        },
+        {
+          "name": "Clubs",
+          "value": 10
+        }
+      ]
+    },
+    "Bergedorf": {
+      "matchingScore": 25,
+      "criteria": [
+        {
+          "name": "KiTas",
+          "value": 120
+        },
+        {
+          "name": "Unis",
+          "value": 100
+        },
+        {
+          "name": "Clubs",
+          "value": 10
+        }
+      ]
+    }
+  }
+}
