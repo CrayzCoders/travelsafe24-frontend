@@ -10,6 +10,8 @@ import resultData from "@/global/results/evaluation.json";
 const boundaries = boundariesData as DistrictFeatureCollection;
 const results = resultData as EvaluationResponse;
 
+sessionStorage.setItem("onboarding", JSON.stringify(resultData))
+
 const HAMBURG_CENTER = L.latLng(53.57532, 10.01534);
 const DEFAULT_ZOOM = 12;
 const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
@@ -80,14 +82,17 @@ export default function Map() {
     };
   }, []);
 
-  return (
-    <div style={{ position: "relative" }}>
-      <div className="h-full" id="map" />
-      <div className="absolute top-0 right-0 z-400">
-        <DistrictInfoContainer
-          districtName={selectedLayer?.feature?.properties?.Stadtteil}
-        />
-      </div>
+return (
+    <div style={{ position: "relative", overflow: "hidden" }}>
+    <div className="h-full" id="map" />
+    <div className="absolute top-0 right-0 z-400">
+        {selectedLayer && (
+            <DistrictInfoContainer
+                districtName={selectedLayer?.feature?.properties?.Stadtteil ?? ""}
+                onClose={() => setSelectedLayer(null)}
+            />
+        )}
     </div>
-  );
+</div>
+);
 }
