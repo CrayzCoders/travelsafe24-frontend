@@ -77,6 +77,7 @@ export default function DistrictInfoContainer({ districtName, onClose }: Distric
                             </span>
                         </div>
                     ))}
+                    {!district && <p>No Data Available</p>}
                 </div>
 
                 <div className="h-0.5 bg-linear-to-r from-[rgb(247,100,94)] via-[rgb(247,140,100)] to-transparent" />
