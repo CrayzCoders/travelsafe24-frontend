@@ -58,7 +58,7 @@ function MobileMenu() {
             <Menu className="h-4 w-4" />
           </Button>
         </SheetTrigger>
-        <SheetContent>
+        <SheetContent className="z-999">
           <SheetHeader>
             <SheetTitle>Menu</SheetTitle>
           </SheetHeader>
