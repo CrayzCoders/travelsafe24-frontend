@@ -43,7 +43,7 @@ function getDistrictStyle(name: string): L.PathOptions {
   const district = results?.districts[name];
   if (!district) return { color: "gray", opacity: 0.5, stroke: false };
   const color = getDistrictColor(district.matchingScore);
-  return { color, fillColor: color, opacity: 1 };
+  return { color, fillColor: color, opacity: 1, fillOpacity: 0.55 };
 }
 
 export default function Map() {
