@@ -25,7 +25,8 @@ type SelectedLayer = L.Layer & { feature: DistrictFeature };
 const GRADIENT_COLORS = ["#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#27ae60"];
 
 function getDistrictColor(score: number): string {
-  const { minScore, maxScore } = results.infos;
+  const { maxScore } = results.infos;
+  const minScore = 0;
   const range = maxScore - minScore;
 
   if (range === 0) return GRADIENT_COLORS[GRADIENT_COLORS.length - 1];
@@ -44,6 +45,11 @@ function getDistrictStyle(name: string): L.PathOptions {
   if (!district) return { color: "gray", opacity: 0.5, stroke: false };
   const color = getDistrictColor(district.matchingScore);
   return { color, fillColor: color, opacity: 1 };
+}
+
+function getMatchingScore(districtName: string) {
+  const districtMatchingScore = results.districts[districtName].matchingScore
+  return districtMatchingScore != null ? Number(districtMatchingScore.toFixed(2)) : null
 }
 
 export default function Map() {
@@ -106,6 +112,7 @@ export default function Map() {
         {selectedLayer && (
           <DistrictInfoContainer
             districtName={selectedLayer?.feature?.properties?.Stadtteil ?? ""}
+            matchingScore={getMatchingScore(selectedLayer?.feature?.properties?.Stadtteil ?? "")}
             onClose={() => setSelectedLayer(null)}
           />
         )}

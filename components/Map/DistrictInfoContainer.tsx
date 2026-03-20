@@ -19,6 +19,7 @@ interface CityData {
 
 interface DistrictInfoContainerProps {
   districtName: string;
+  matchingScore: number;
   onClose: () => void;
 }
 
@@ -33,6 +34,7 @@ function getDistrictData(districtName: string) {
 
 export default function DistrictInfoContainer({
   districtName,
+  matchingScore,
   onClose,
 }: DistrictInfoContainerProps) {
   const district = getDistrictData(districtName) as District;
@@ -48,6 +50,7 @@ export default function DistrictInfoContainer({
             <h1 className="text-xl font-bold text-zinc-900 leading-tight tracking-tight">
               {districtName}
             </h1>
+            <p>Matching Score: {matchingScore}</p>
           </div>
           <button
             onClick={onClose}
