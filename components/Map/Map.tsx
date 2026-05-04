@@ -23,7 +23,6 @@ type SelectedLayer = L.Layer & { feature: DistrictFeature };
 const GRADIENT_COLORS = ["#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#27ae60"];
 
 function getDistrictColor(score: number, results: EvaluationResponse): string {
-  console.log("getDistrictColor", results);
   const { maxScore } = results.infos;
   const minScore = 0;
   const range = maxScore - minScore;
