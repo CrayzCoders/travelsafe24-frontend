@@ -1,23 +1,7 @@
-import { EvaluationResponse } from "@/global/types/evaluation";
-
-interface Criterion {
-  name: string;
-  value: number;
-}
-
-interface District {
-  matchingScore: number;
-  criteria: Criterion[];
-}
-
-interface CityData {
-  infos: {
-    city: string;
-    minScore: number;
-    maxScore: number;
-  };
-  districts: Record<string, District>;
-}
+import {
+  DistrictEvaluation,
+  EvaluationResponse,
+} from "@/global/types/evaluation";
 
 interface DistrictInfoContainerProps {
   districtName: string;
@@ -26,8 +10,8 @@ interface DistrictInfoContainerProps {
   results: EvaluationResponse;
 }
 
-function getDistrictData(districtName: string, results: CityData) {
-  const district: District = results.districts[districtName];
+function getDistrictData(districtName: string, results: EvaluationResponse) {
+  const district: DistrictEvaluation = results.districts[districtName];
   if (!district) return;
   return district;
 }
@@ -38,7 +22,7 @@ export default function DistrictInfoContainer({
   onClose,
   results,
 }: DistrictInfoContainerProps) {
-  const district = getDistrictData(districtName, results) as District;
+  const district = getDistrictData(districtName, results) as DistrictEvaluation;
 
   return (
     <>
@@ -46,7 +30,7 @@ export default function DistrictInfoContainer({
         <div className="px-5 py-4 border-b border-zinc-100 bg-zinc-50 flex items-start justify-between">
           <div>
             <p className="text-[10px] font-semibold tracking-[0.2em] uppercase text-zinc-400 mb-1">
-              District
+              DistrictEvaluation
             </p>
             <h1 className="text-xl font-bold text-zinc-900 leading-tight tracking-tight">
               {districtName}
