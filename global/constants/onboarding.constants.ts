@@ -1,4 +1,7 @@
-import { type FormState, type ImportanceLevel } from "./types";
+import {
+  type FormState,
+  type ImportanceLevel,
+} from "@/global/types/onboarding.types";
 
 export const INITIAL_FORM_STATE: FormState = {
   needsKitasSchoolsUnis: null,

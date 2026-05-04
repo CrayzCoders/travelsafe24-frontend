@@ -1,3 +1,5 @@
+import { EvaluationResponse } from "@/global/types/evaluation";
+
 interface Criterion {
   name: string;
   value: number;

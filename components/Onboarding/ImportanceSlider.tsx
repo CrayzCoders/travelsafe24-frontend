@@ -1,7 +1,10 @@
 "use client";
 import { Slider } from "@/components/ui/slider";
-import { DEFAULT_IMPORTANCE_LEVEL, IMPORTANCE_OPTIONS } from "./constants";
-import { type ImportanceLevel } from "./types";
+import {
+  DEFAULT_IMPORTANCE_LEVEL,
+  IMPORTANCE_OPTIONS,
+} from "@/global/constants/onboarding.constants";
+import { type ImportanceLevel } from "@/global/types/onboarding.types";
 
 interface ImportanceSliderProps {
   value: ImportanceLevel;
