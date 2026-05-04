@@ -8,11 +8,9 @@ import {
 import { EvaluationResponse } from "@/global/types/evaluation";
 import DistrictInfoContainer from "@/components/Map/DistrictInfoContainer";
 import boundariesData from "@/global/boundaries/hamburg/hamburgStadtteile.json";
+import { useRouter } from "next/navigation";
 
 const boundaries = boundariesData as DistrictFeatureCollection;
-const results = JSON.parse(
-  sessionStorage.getItem("onboarding") || "{}",
-) as EvaluationResponse;
 
 const HAMBURG_CENTER = L.latLng(53.57532, 10.01534);
 const DEFAULT_ZOOM = 12;
@@ -24,7 +22,8 @@ type SelectedLayer = L.Layer & { feature: DistrictFeature };
 
 const GRADIENT_COLORS = ["#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#27ae60"];
 
-function getDistrictColor(score: number): string {
+function getDistrictColor(score: number, results: EvaluationResponse): string {
+  console.log("getDistrictColor", results);
   const { maxScore } = results.infos;
   const minScore = 0;
   const range = maxScore - minScore;
@@ -40,24 +39,49 @@ function getDistrictColor(score: number): string {
   return GRADIENT_COLORS[index];
 }
 
-function getDistrictStyle(name: string): L.PathOptions {
+function getDistrictStyle(
+  name: string,
+  results: EvaluationResponse,
+): L.PathOptions {
   const district = results?.districts[name];
   if (!district) return { color: "gray", opacity: 0.5, stroke: false };
-  const color = getDistrictColor(district.matchingScore);
+  const color = getDistrictColor(district.matchingScore, results);
   return { color, fillColor: color, opacity: 1, fillOpacity: 0.55 };
 }
 
-function getMatchingScore(districtName: string) {
-  const districtMatchingScore = results.districts[districtName].matchingScore
-  return districtMatchingScore != null ? Number(districtMatchingScore.toFixed(2)) : null
+function getMatchingScore(districtName: string, results: EvaluationResponse) {
+  const districtMatchingScore = results.districts[districtName].matchingScore;
+  return districtMatchingScore != null
+    ? Number(districtMatchingScore.toFixed(2))
+    : null;
 }
 
 export default function Map() {
+  const router = useRouter();
   const mapRef = useRef<L.Map | null>(null);
   const highlightedLayerRef = useRef<L.GeoJSON | null>(null);
   const [selectedLayer, setSelectedLayer] = useState<SelectedLayer | null>(
     null,
   );
+  const [results, setResults] = useState<EvaluationResponse>(
+    {} as EvaluationResponse,
+  );
+
+  useEffect(() => {
+    const rawResults = sessionStorage.getItem("onboarding");
+    if (!rawResults) {
+      router.replace("/onboarding");
+      return;
+    }
+    try {
+      const results = JSON.parse(rawResults) as EvaluationResponse;
+      // eslint-disable-next-line
+      setResults(results);
+    } catch (err) {
+      console.error(err);
+      router.replace("/onboarding");
+    }
+  }, [router]);
 
   useEffect(() => {
     if (mapRef.current) return;
@@ -73,7 +97,7 @@ export default function Map() {
 
       if (Object.keys(results).length === 0) return;
       const layer = L.geoJSON(stadtteil as unknown as GeoJSON.Feature, {
-        style: getDistrictStyle(name),
+        style: getDistrictStyle(name, results),
         onEachFeature: (_feature, featureLayer) => {
           featureLayer.on("mouseover", () => {
             if (
@@ -103,7 +127,7 @@ export default function Map() {
       map.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [results]);
 
   return (
     <div style={{ position: "relative", overflow: "hidden" }}>
@@ -112,8 +136,12 @@ export default function Map() {
         {selectedLayer && (
           <DistrictInfoContainer
             districtName={selectedLayer?.feature?.properties?.Stadtteil ?? ""}
-            matchingScore={getMatchingScore(selectedLayer?.feature?.properties?.Stadtteil ?? "")}
+            matchingScore={getMatchingScore(
+              selectedLayer?.feature?.properties?.Stadtteil ?? "",
+              results,
+            )}
             onClose={() => setSelectedLayer(null)}
+            results={results}
           />
         )}
       </div>

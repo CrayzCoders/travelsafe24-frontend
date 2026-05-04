@@ -21,13 +21,11 @@ interface DistrictInfoContainerProps {
   districtName: string;
   matchingScore: number | null;
   onClose: () => void;
+  results: EvaluationResponse;
 }
 
-function getDistrictData(districtName: string) {
-  const districtInfo = JSON.parse(
-    sessionStorage.getItem("onboarding") || "{}",
-  ) as CityData;
-  const district: District = districtInfo.districts[districtName];
+function getDistrictData(districtName: string, results: CityData) {
+  const district: District = results.districts[districtName];
   if (!district) return;
   return district;
 }
@@ -36,8 +34,9 @@ export default function DistrictInfoContainer({
   districtName,
   matchingScore,
   onClose,
+  results,
 }: DistrictInfoContainerProps) {
-  const district = getDistrictData(districtName) as District;
+  const district = getDistrictData(districtName, results) as District;
 
   return (
     <>
