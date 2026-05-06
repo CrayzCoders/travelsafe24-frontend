@@ -98,7 +98,8 @@ export default function Onboarding() {
       },
       body: JSON.stringify(payload),
     }).then((response) => response.json());
-    sessionStorage.setItem("onboarding", JSON.stringify(response));
+
+    sessionStorage.setItem("onboarding", JSON.stringify(await response));
     router.push("/map");
   };
 
