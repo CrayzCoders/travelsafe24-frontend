@@ -18,11 +18,11 @@ import OnboardingStepManager from "@/components/Onboarding/OnboardingStepManager
 import StepOne from "@/components/Onboarding/steps/StepOne";
 import StepTwo from "@/components/Onboarding/steps/StepTwo";
 import StepThree from "@/components/Onboarding/steps/StepThree";
+import { useRouter } from "next/navigation";
 import {
   isStepValid,
   toBackendPayload,
 } from "@/components/Onboarding/onboarding.utils";
-import { useRouter } from "next/navigation";
 
 export default function Onboarding() {
   const router = useRouter();

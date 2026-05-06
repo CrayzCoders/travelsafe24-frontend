@@ -3,10 +3,10 @@ import {
   PROFESSION_OPTIONS,
 } from "@/global/constants/onboarding.constants";
 import {
-  type BackendPayload,
-  type FormState,
-  type ImportanceLevel,
-} from "../../global/types/onboarding.types";
+  BackendPayload,
+  FormState,
+  ImportanceLevel,
+} from "@/global/types/onboarding.types";
 
 function toNumber(value: ImportanceLevel): number | undefined {
   if (value === "") return DEFAULT_IMPORTANCE_LEVEL;
