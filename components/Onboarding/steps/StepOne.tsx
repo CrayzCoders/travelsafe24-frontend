@@ -1,7 +1,7 @@
 import ConditionalField from "@/components/Onboarding/ConditionalField";
 import ImportanceSlider from "@/components/Onboarding/ImportanceSlider";
 import YesNoRadioGroup from "@/components/Onboarding/YesNoRadioGroup";
-import { type StepProps } from "@/components/Onboarding/types";
+import { type StepProps } from "@/global/types/onboarding.types";
 import { Field, FieldLabel } from "@/components/ui/field";
 
 export default function StepOne({ formState, onChange }: StepProps) {

@@ -9,51 +9,17 @@ import { EvaluationResponse } from "@/global/types/evaluation";
 import DistrictInfoContainer from "@/components/Map/DistrictInfoContainer";
 import boundariesData from "@/global/boundaries/hamburg/hamburgStadtteile.json";
 import { useRouter } from "next/navigation";
+import {
+  DEFAULT_ZOOM,
+  HAMBURG_CENTER,
+  TILE_ATTRIBUTION,
+  TILE_URL,
+} from "@/global/constants/map.constants";
+import { getDistrictStyle, getMatchingScore } from "@/components/Map/map.utils";
 
 const boundaries = boundariesData as DistrictFeatureCollection;
 
-const HAMBURG_CENTER = L.latLng(53.57532, 10.01534);
-const DEFAULT_ZOOM = 12;
-const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
-const TILE_ATTRIBUTION =
-  '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
-
 type SelectedLayer = L.Layer & { feature: DistrictFeature };
-
-const GRADIENT_COLORS = ["#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#27ae60"];
-
-function getDistrictColor(score: number, results: EvaluationResponse): string {
-  const { maxScore } = results.infos;
-  const minScore = 0;
-  const range = maxScore - minScore;
-
-  if (range === 0) return GRADIENT_COLORS[GRADIENT_COLORS.length - 1];
-
-  const normalized = (score - minScore) / range;
-  const index = Math.min(
-    Math.floor(normalized * GRADIENT_COLORS.length),
-    GRADIENT_COLORS.length - 1,
-  );
-
-  return GRADIENT_COLORS[index];
-}
-
-function getDistrictStyle(
-  name: string,
-  results: EvaluationResponse,
-): L.PathOptions {
-  const district = results?.districts[name];
-  if (!district) return { color: "gray", opacity: 0.5, stroke: false };
-  const color = getDistrictColor(district.matchingScore, results);
-  return { color, fillColor: color, opacity: 1, fillOpacity: 0.55 };
-}
-
-function getMatchingScore(districtName: string, results: EvaluationResponse) {
-  const districtMatchingScore = results.districts[districtName].matchingScore;
-  return districtMatchingScore != null
-    ? Number(districtMatchingScore.toFixed(2))
-    : null;
-}
 
 export default function Map() {
   const router = useRouter();

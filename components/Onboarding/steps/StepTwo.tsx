@@ -1,5 +1,5 @@
-import { PROFESSION_OPTIONS } from "@/components/Onboarding/constants";
-import { type StepProps } from "@/components/Onboarding/types";
+import { PROFESSION_OPTIONS } from "@/global/constants/onboarding.constants";
+import { type StepProps } from "@/global/types/onboarding.types";
 import {
   Field,
   FieldContent,

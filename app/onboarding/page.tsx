@@ -9,17 +9,20 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
-import { INITIAL_FORM_STATE } from "@/components/Onboarding/constants";
+import { INITIAL_FORM_STATE } from "@/global/constants/onboarding.constants";
 import {
   type ChangeAnimation,
   type FormState,
-} from "@/components/Onboarding/types";
+} from "@/global/types/onboarding.types";
 import OnboardingStepManager from "@/components/Onboarding/OnboardingStepManager";
 import StepOne from "@/components/Onboarding/steps/StepOne";
 import StepTwo from "@/components/Onboarding/steps/StepTwo";
 import StepThree from "@/components/Onboarding/steps/StepThree";
-import { isStepValid, toBackendPayload } from "@/components/Onboarding/utils";
 import { useRouter } from "next/navigation";
+import {
+  isStepValid,
+  toBackendPayload,
+} from "@/components/Onboarding/onboarding.utils";
 
 export default function Onboarding() {
   const router = useRouter();

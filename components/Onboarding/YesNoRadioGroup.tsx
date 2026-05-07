@@ -5,7 +5,7 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { type YesNo } from "./types";
+import { type YesNo } from "@/global/types/onboarding.types";
 
 interface YesNoRadioGroupProps {
   value: YesNo;

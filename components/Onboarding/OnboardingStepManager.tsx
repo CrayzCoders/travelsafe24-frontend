@@ -1,7 +1,7 @@
 "use client";
 import { Dispatch, type ReactNode, SetStateAction, useEffect } from "react";
 import { FieldGroup } from "@/components/ui/field";
-import { type ChangeAnimation } from "./types";
+import { type ChangeAnimation } from "@/global/types/onboarding.types";
 
 interface OnboardingStepManagerProps {
   formLayers: ReactNode[];
