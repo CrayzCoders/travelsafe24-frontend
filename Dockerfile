@@ -1,5 +1,5 @@
 FROM node:25.9.0-alpine3.22 AS base
-RUN npm install -g pnpm
+RUN npm install -g pnpm@11.1.1
 
 
 FROM base AS deps
